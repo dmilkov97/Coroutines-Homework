@@ -15,13 +15,9 @@ class CatsView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), ICatsView {
 
-    var presenter :CatsPresenter? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        findViewById<Button>(R.id.button).setOnClickListener {
-            presenter?.onInitComplete()
-        }
     }
     fun loadImageFromUrl(url: String, imageView: ImageView) {
         Picasso.get()
