@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancel
 
 class CatsViewModel(
@@ -34,8 +35,13 @@ class CatsViewModel(
                 _result.value = Result.Success(fact)
             }
             catch (e: Exception) {
-                CrashMonitor.trackWarning(e)
-                _result.value = Result.Error(e)
+                when (e) {
+                    is CancellationException -> throw e
+                    else -> {
+                        CrashMonitor.trackWarning(e)
+                        _result.value = Result.Error(e)
+                    }
+                }
             }
         }
     }
