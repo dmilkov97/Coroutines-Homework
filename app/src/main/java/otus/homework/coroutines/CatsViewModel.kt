@@ -57,7 +57,6 @@ class CatsViewModel(
     override fun onCleared() {
         super.onCleared()
         detachView()
-        viewModelScope.cancel()
     }
 
     sealed class Result<out T> {
