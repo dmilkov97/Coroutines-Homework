@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
+import kotlin.coroutines.cancellation.CancellationException
 
 class CatsPresenter(
     private val catsService: CatsService,
@@ -30,6 +31,7 @@ class CatsPresenter(
             }
             catch (e: Exception) {
                 when (e) {
+                    is CancellationException -> throw e
                     is SocketTimeoutException -> {
                         _catsView?.showServerErrorToast()
                     }
