@@ -8,13 +8,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancel
 
 class CatsViewModel(
     private val catsService: CatsService,
     private val catsServicePics: CatsServicePics
 ) : ViewModel() {
-    private var _catsView: ICatsView? = null
     private val _result = MutableLiveData<Result<Fact>>()
     val result: LiveData<Result<Fact>> = _result
 
@@ -31,7 +29,6 @@ class CatsViewModel(
                 val pic = imageDeferred.await()
                 val url = pic.firstOrNull()?.url
                 fact.url = url.toString()
-                _catsView?.populate(fact)
                 _result.value = Result.Success(fact)
             }
             catch (e: Exception) {
@@ -45,18 +42,8 @@ class CatsViewModel(
             }
         }
     }
-
-    fun attachView(catsView: ICatsView) {
-        _catsView = catsView
-    }
-
-    fun detachView() {
-        _catsView = null
-    }
-
     override fun onCleared() {
         super.onCleared()
-        detachView()
     }
 
     sealed class Result<out T> {
